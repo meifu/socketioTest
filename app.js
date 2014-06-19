@@ -7,6 +7,7 @@ var flash = require('connect-flash');
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var cookieSession = require('cookie-session');
+var session = require('express-session');
 
 app.set('views', __dirname + '/public/views');
 app.set('view engine', 'ejs');
@@ -21,7 +22,7 @@ app.use(express.static(__dirname + '/'));
 app.use(cookieParser());
 app.use(bodyParser());
 // app.use(express.methodOverride());
-app.use(express.session({secret: 'keyboard cat'}));
+app.use(session({secret: 'keyboard cat'}));
 app.use(flash());
 
 require('./routes')(app);

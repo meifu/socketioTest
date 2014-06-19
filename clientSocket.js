@@ -22,7 +22,8 @@ jQuery(function($){
             App.Host.gameInit(data);
         },
         playerJoinedRoom : function(data) {
-            App[App.myRole].updateWaiting(data);
+            console.log('plyerJoinedRoom: ' + data);
+            // App[App.myRole].updateWaiting(data);
         }
     }
 
@@ -83,7 +84,7 @@ jQuery(function($){
                 // console.log("Game started with ID: " + App.gameId + ' by host: ' + App.mySocketId);
             },
 
-            displayNewGameScreen : function(gameid) {
+            displayNewGameScreen: function(gameid) {
                 // Fill the game screen with the appropriate HTML
                 App.$hostGameArea.html(App.$newGameTemplate);
                 // Display the URL on screen
@@ -113,12 +114,14 @@ jQuery(function($){
 
                 // collect data to send to the server
                 var data = {
-                    gameId : +($('#inputGameId').val()),
+                    gameId : $('#inputGameId').val(),
                     playerName: $('#username').html()
                 };
 
                 // Send the gameId and playerName to the server
                 IO.socket.emit('playerJoinGame', data);
+                console.log('gameId: ' + data.gameId);
+                io('/' + data.gameId);
 
                 // Set the appropriate properties for the current player.
                 App.myRole = 'Player';

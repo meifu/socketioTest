@@ -88,5 +88,17 @@ function Routes (app) {
         res.redirect('/');
     }
 
+    function generateRoom(length) {
+		var haystack = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+		var room = '';
+
+		for (var i = 0; i < length; i++) {
+		room += haystack.charAt(Math.floor(Math.random() * 62));
+		}
+		console.log('SERVER: room: ' + room);
+		return room;
+	}
+
+
 }
 

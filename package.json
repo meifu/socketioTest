@@ -6,7 +6,7 @@
     "start": "supervisor app.js"
   },
   "dependencies": {
-    "express": "3.x",
+    "express": "4.*",
     "ejs": ">= 0.0.0",
     "asseturls": "*",
     "passport": "*",
@@ -23,7 +23,8 @@
     "connect-flash": "*",
     "body-parser": "*",
     "cookie-parser": "*",
-    "cookie-session": "*"
+    "cookie-session": "*",
+    "express-session": "*"
   },
   "engines": {
     "node": "0.10.x"
