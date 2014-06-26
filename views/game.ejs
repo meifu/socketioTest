@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<title>Versus Rock</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="stylesheet" href="stylesheets/normalize.css">
+        <link rel="stylesheet" href="stylesheets/main.css">
+        <script src="js/vendor/modernizr-2.6.2.min.js"></script>
+	</head>
+	<body>
+		<h1>Let's Play</h1>
+		<p>Hello! <span id="username"><%= user.username %></span></p>
+		<div id="initialScreen">
+			<p>create a new game or join an existed game</p>
+			<button class="btn" id="createNewGame">create</button>
+			<button class="btn" id="btnJoinGame">join</button>	
+		</div>
+		
+		<div id="hostGameArea"></div>
+		<div id="gameWaitArea"></div>
+		<div id="gameStartArea"></div>
+
+		<!-- This screen appears when a user clicks "CREATE" on the Title Screen -->
+	    <script id="create-game-template" type="text/template">
+	        
+	        <div id="centerWrap">
+	            <h1 id="logoL"><img src="img/ui/logoL.png" alt="Versus Rock - Rock Papeer Scissors in IO"></h1>
+	            <div id="vibe" class="abs"> </div>
+	            <div id="RCLeft"class="circXL circ abs">
+	                <div class="sign"></div>
+	            </div>
+	            <div id="RCRight"class="circXL circ abs">
+	                <div class="sign rockR"></div>
+	            </div>
+	            <div id="QRXL" class="abs QR"><a href="#" id="roomlink"><img src="img/qrXL.png" alt="QR"></a></div>
+	            <input type="text" value="/game/" id="shareUrl" style="position:absolute; bottom: 30px;">
+	        </div>
+
+	    </script>
+
+	    <!-- This scrreen appears when a player clicks "JOIN" on the Title Screen -->
+	    <script id="join-game-template" type="text/template">
+        	<input type="text" name="" value="" placeholder="enter game ID" id="inputGameId">
+	        <button type="" id="btnStart">Start</button>
+	    </script>
+
+	    <script id="game-wait-host-template" type="text/template">
+	    	<div id="centerWrap">
+	            <h1 id="logoS" class="abs"><img src="/img/ui/logoS.png" alt="Versus Rock - Rock Papeer Scissors in IO"></h1>
+	            <div id="vibe" class="abs"> </div>
+	            <div id="ProfileL"class="circXL circ abs prof">
+	                <div class="streak abs">
+	                    <span>
+	                        
+	                    </span>
+	                </div>
+	            </div>
+	            <div id="waitingDesc" class="descBlue abs">
+	                Please wait for a new opponent to join game
+	            </div> 
+	            <div id="ProfileR"class="circXL circ abs prof opao">
+
+	            </div>
+	            <div id="QRXL" class="abs QR"><img src="/img/qrXL.png" alt="QR"></div>
+	            <div id="readyBtn" class="abs circ descBlue opao">
+	                Press Ready <br> On your Device To Start
+	                img
+	                <div id="readyL" class="readyEmmit abs opao"></div>
+	                <div id="readyR" class="readyEmmit abs opao"></div>
+	            </div>
+	        </div>
+	    </script>
+
+	    <script id="game-wait-player-template" type="text/template">
+	    	<div id="centerWrap">
+	            <h1 id="logoS" class="abs"><img src="/img/ui/logoS.png" alt="Versus Rock - Rock Papeer Scissors in IO"></h1>
+	            <div id="ProfileMe" class="circXL circ abs prof">
+	                <div class="streak abs">
+	                    <span>
+	                        
+	                    </span>
+	                </div> 
+	            </div>
+	            <div id="waitingDescM" class="descBlue abs">
+	                Please wait for <br>a Opponent to join
+	            </div>
+	            <div id="oppoDesc" class="abs opao">
+	                <div id="playingDesc" class="descBlue fl">Playing Against</div>
+	                <div id="oppoName" class="descBlue fr"></div>
+	            </div>
+	            <div id="ProfileOpp" class="circS abs opao"></div>
+	            <div id="readyBtnM" class="circXL circ abs opao descBlue">
+	                READY
+	            </div>
+	            <div class="descWhite opao">Press Ready to Begin</div>
+	        </div>
+	        <div id="readyWait">
+	            <p>
+	                please wait
+	            </p>
+	        </div>
+	    </script>
+
+	    <script id="game-main-player-template" type="text/template">
+	    	<div id="centerWrap" class="mobile">
+	            <div id="profileStatus" class="abs clearfix">
+	                <div id="p1Profile" class="gProfileWrap fl">
+	                    <div class="profileStatusWrap clearfix">
+	                        <div class="gProfile fl">
+	                            
+	                        </div>
+	                        <div class="streak fl">
+	                            <span>
+	                                
+	                            </span>
+	                        </div>                      
+	                    </div>
+	                    <div class="gStatus">
+	                        <ul class="clearfix">
+	                            <li class="ti">O</li>
+	                            <li class="ti">O</li>
+	                            <li class="ti">O</li>
+	                        </ul>
+	                    </div>
+	                </div>
+	                <div id="p2Profile" class="fr">
+	                    <div class="profileStatusWrap clearfix">
+	                        <div class="gProfile fr">
+	                            
+	                        </div>
+	                    </div>
+	                    <div class="gStatus">
+	                        <ul class="clearfix">
+	                            <li class="ti">O</li>
+	                            <li class="ti">O</li>
+	                            <li class="ti">O</li>
+	                        </ul>
+	                    </div>
+	                </div>                
+	            </div>               
+	            <div class="choice abs gwrapM ready" id="rock">
+	                <div class="gs gCircXL circ">
+	                    <div class="sign prep"></div>
+	                </div>                
+	            </div>      
+	            <div class="choice abs gwrapM ready" id="scissors">
+	                <div class="gs gCircXL circ">
+	                    <div class="sign prep"></div>
+	                </div>                
+	            </div>
+	            <div class="choice abs gwrapM ready" id="paper">
+	                <div class="gs gCircXL circ">
+	                    <div class="sign prep"></div>
+	                </div>                
+	            </div>            
+	        </div>
+	    </script>
+
+	    <script id="game-main-host-template" type="text/template">
+	    	<div id="centerWrap">
+	            <div id="game">
+	                
+	                <h1 id="logoS" class="abs"><img src="/img/ui/logoS.png" alt="Versus Rock - Rock Papeer Scissors in IO"></h1>
+	                <div id="vibe" class="abs"> </div>
+	                <div id="profileStatus" class="abs clearfix">
+	                    <div id="p1Profile" class="gProfileWrap fl">
+	                        <div class="profileStatusWrap clearfix">
+	                            <div class="gProfile fl">
+	                                
+	                            </div>
+	                            <div class="streak fl">
+	                                <span>
+	                                    
+	                                </span>
+	                            </div>                      
+	                        </div>
+	                    </div>
+	                    <div id="p2Profile" class="gProfileWrap fr">
+	                        <div class="profileStatusWrap">
+	                            <div class="gProfile fl">
+	                                
+	                            </div>
+	                        </div>
+	                    </div>                
+	                </div>   
+	                <div id="gameRoundCount" class="descBlue">Game <span id="round">1</span></div>        
+	                <div id="" class="p1Game abs gwrap">
+	                    <div class="gStatus">
+	                        <ul class="clearfix">
+	                            <li class="ti">O</li>
+	                            <li class="ti">O</li>
+	                            <li class="ti">O</li>
+	                        </ul>
+	                    </div>
+	                    <div class="gs gCircXL circ">
+	                        <div class="sign prep"></div>
+	                    </div>
+	                    <div class="resultText descBlue"></div>
+	                </div>
+	                <div id="" class="p2Game abs gwrap">
+	                    <div class="gStatus">
+	                        <ul class="clearfix">
+	                            <li class="ti">O</li>
+	                            <li class="ti">O</li>
+	                            <li class="ti">O</li>
+	                        </ul>
+	                    </div>
+	                    <div class="gs gCircXL circ">
+	                        <div class="sign prep"></div>
+	                    </div>
+	                    <div class="resultText descBlue"></div>
+	                </div>
+	                <div id="QRXL" class="abs QR"><img src="/img/qrS.png" alt="QR"></div>
+	            </div><!--end gameSection-->
+	            <div id="result" style="display:none;">
+	                <h1 id="logoS" class="abs"><img src="/img/ui/logoS.png" alt="Versus Rock - Rock Papeer Scissors in IO"></h1>
+	                <div id="vibe" class="abs"> </div>
+	                <!-- <div id="ProfileL"class="circXL circ abs prof">
+	                    <div class="streak abs">
+	                        <span>
+	                            0
+	                        </span>
+	                    </div>
+	                </div>
+	                <div class="descBlue abs resultDesc">
+	                    Winner
+	                </div>  -->
+	                <div id="" class="p1Game abs gwrap">
+	                    <div class="gs gCircXL circ">
+	                    </div>
+	                    <div class="streak abs">
+	                        <span>
+	                            0
+	                        </span>
+	                    </div>
+	                    <div class="resultText descBlue"></div>
+	                    <div class="descWhite">Start a New Game <br>From your Device</div>
+	                </div>
+	                <div id="" class="p2Game abs gwrap">
+	                    <div class="gs gCircXL circ">
+	                    </div>
+	                    <div class="streak abs">
+	                        <span>
+	                            0
+	                        </span>
+	                    </div>
+	                    <div class="resultText descBlue"></div>
+	                </div>
+	                <div id="QRXL" class="abs QR"><img src="/img/qrS.png" alt="QR"></div>
+	            </div>
+	        </div>
+	        <div id="countDown"></div>
+	        <div id="flashLayer"></div>
+	    </script>
+
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+		<script src="/socket.io/socket.io.js"></script>
+		<script src="/clientSocket.js"></script>
+	</body>
+</html>

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<title>Versus Rock</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <style>
+			.btn {
+				margin: 10px;
+				padding: 10px;
+				background: #aaa;
+			}
+        </style>
+	</head>
+	<body>
+		<h1>menu</h1>
+		<% if (!user) { %>
+			<h2>Please log in.</h2>
+		<% } else { %>
+			<p>create a new game or join an existed game</p>
+			<a href="/game" class="btn">create</a>
+			<a href="/join" class="btn">join</a>
+		<% } %>
+		
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+	<script src="/socket.io/socket.io.js"></script>
+	</body>
+</html>

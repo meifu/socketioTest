@@ -9,7 +9,7 @@ var cookieParser = require('cookie-parser');
 var cookieSession = require('cookie-session');
 var session = require('express-session');
 
-app.set('views', __dirname + '/public/views');
+app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
 // app.engine('ejs', require('ejs-locals'));
 app.set('base_url', 'http://localhost:3000/');
@@ -18,7 +18,7 @@ app.set('port', 3000);
 
 server.listen(app.get('port'));
 
-app.use(express.static(__dirname + '/'));
+app.use(express.static(__dirname + '/public'));
 app.use(cookieParser());
 app.use(bodyParser());
 // app.use(express.methodOverride());

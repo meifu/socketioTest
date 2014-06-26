@@ -1,0 +1,695 @@
+/*! HTML5 Boilerplate v4.3.0 | MIT License | http://h5bp.com/ */
+/*
+ * What follows is the result of much research on cross-browser styling.
+ * Credit left inline and big thanks to Nicolas Gallagher, Jonathan Neal,
+ * Kroc Camen, and the H5BP dev community and team.
+ */
+/* ==========================================================================
+   Base styles: opinionated defaults
+   ========================================================================== */
+html,
+button,
+input,
+select,
+textarea {
+  color: #222; }
+
+html {
+  font-size: 1em;
+  line-height: 1.4;
+  height: 100%;
+  min-height: 100%; }
+
+*, *:before, *:after {
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box; }
+
+/*
+ * Remove text-shadow in selection highlight: h5bp.com/i
+ * These selection rule sets have to be separate.
+ * Customize the background color to match your design.
+ */
+::-moz-selection {
+  background: #b3d4fc;
+  text-shadow: none; }
+
+::selection {
+  background: #b3d4fc;
+  text-shadow: none; }
+
+/*
+ * A better looking default horizontal rule
+ */
+hr {
+  display: block;
+  height: 1px;
+  border: 0;
+  border-top: 1px solid #ccc;
+  margin: 1em 0;
+  padding: 0; }
+
+/*
+ * Remove the gap between images, videos, audio and canvas and the bottom of
+ * their containers: h5bp.com/i/440
+ */
+audio,
+canvas,
+img,
+video {
+  vertical-align: middle; }
+
+/*
+ * Remove default fieldset styles.
+ */
+fieldset {
+  border: 0;
+  margin: 0;
+  padding: 0; }
+
+/*
+ * Allow only vertical resizing of textareas.
+ */
+textarea {
+  resize: vertical; }
+
+/* ==========================================================================
+   Browse Happy prompt
+   ========================================================================== */
+.browsehappy {
+  margin: 0.2em 0;
+  background: #ccc;
+  color: #000;
+  padding: 0.2em 0; }
+
+/* ==========================================================================
+   general style
+   ========================================================================== */
+body {
+  background: url("../img/ui/mainBg.png") left top repeat-x black;
+  font-family: 'Century Gothic', sans-serif; }
+
+#centerWrap {
+  width: 1030px;
+  height: 690px;
+  margin: 20px auto 0;
+  overflow: auto;
+  position: relative;
+  overflow: hidden; }
+
+/*
+ * Logos
+ */
+#logoL {
+  text-align: center;
+  margin: 110px 0 0; }
+
+#logoS {
+  bottom: 0;
+  left: 50%;
+  margin-left: -220px; }
+
+/*
+ * Vibe
+ */
+#vibe {
+  width: 1030px;
+  height: 255px;
+  background: transparent url("../img/ui/vibe.png") center center no-repeat;
+  z-index: 101; }
+
+#home #vibe {
+  top: 280px; }
+
+#waiting #vibe {
+  top: 110px; }
+
+#result #vibe {
+  top: 110px; }
+
+#game #vibe {
+  top: 245px; }
+
+/*
+ * Cirs and inner signs
+ */
+.circ {
+  width: 275px;
+  height: 275px;
+  z-index: 102; }
+
+.circXL {
+  background: transparent url("../img/ui/circXL.png") center center no-repeat; }
+
+.gCircXL {
+  background: transparent url("../img/ui/circBgSprite.png") left center no-repeat;
+  overflow: hidden; }
+
+.sign {
+  background: transparent url("../img/ui/circSprite.png") left top no-repeat;
+  width: 170px;
+  height: 190px;
+  overflow: hidden; }
+
+.sign.rockR {
+  background-position: right top; }
+
+.sign.prep {
+  background-position: 0 -816px; }
+
+.ready .sign {
+  background-position: -170px -816px; }
+
+.ready .gCircXL {
+  background-position: center center; }
+
+.ready.paper .sign, .ready#paper .sign {
+  background-position: -170px -425px; }
+
+.ready.scissors .sign, .ready#scissors .sign {
+  background-position: -170px -198px; }
+
+.ready.rock .sign, .ready#rock .sign {
+  background-position: -170px -630px; }
+
+.win .gCircXL {
+  background-position: right center; }
+
+.win.paper .sign {
+  background-position: 0 -425px; }
+
+.win.scissors .sign {
+  background-position: 0 -198px; }
+
+.win.rock .sign {
+  background-position: 0 -630px; }
+
+.win .resultText {
+  color: #eedb73; }
+
+#RCLeft {
+  top: 275px;
+  left: 40px;
+  padding: 50px 0 0 60px; }
+
+#RCRight {
+  top: 275px;
+  right: 40px;
+  padding: 50px 0 0 65px; }
+
+#readyBtn {
+  background: url("../img/ui/readyBg.png") no-repeat left top;
+  left: 50%;
+  margin-left: -135px;
+  top: 290px;
+  text-transform: uppercase;
+  padding: 110px 50px 0;
+  position: relative; }
+  #readyBtn .readyEmmit {
+    width: 125px;
+    height: 245px;
+    top: 14px; }
+  #readyBtn #readyL {
+    background: transparent url("../img/ui/readyL.png") left top no-repeat;
+    left: 14px; }
+  #readyBtn #readyR {
+    background: transparent url("../img/ui/readyR.png") left top no-repeat;
+    right: 14px; }
+
+/*
+ * QR
+ */
+.QR {
+  z-index: 102; }
+
+#home .QR {
+  top: 465px;
+  left: 50%;
+  margin-left: -110px; }
+
+#waiting .QR {
+  top: 150px;
+  right: 65px; }
+
+#game .QR {
+  right: 0;
+  bottom: 0; }
+
+#result .QR {
+  right: 0;
+  bottom: 0; }
+
+/*
+ * Profile and Streak
+ */
+#gameRoundCount {
+  position: absolute;
+  top: 170px;
+  width: 100%; }
+
+.prof {
+  top: 110px;
+  position: relative; }
+
+#profileStatus {
+  width: 100%; }
+
+.gProfile {
+  width: 147px;
+  height: 147px;
+  background: transparent url("../img/ui/circS.png") left top no-repeat;
+  text-align: center; }
+  .gProfile > span {
+    font-size: 20px;
+    line-height: 150px; }
+
+#ProfileL {
+  left: 40px;
+  text-align: center; }
+
+#ProfileR {
+  right: 40px;
+  text-align: center; }
+
+#ProfileL > span, #ProfileR > span {
+  font-size: 40px;
+  line-height: 260px; }
+
+.streak {
+  width: 147px;
+  height: 147px;
+  background: transparent url("../img/ui/streakBg.png") left top no-repeat;
+  color: #eedb73;
+  font-size: 45px;
+  overflow: auto; }
+  .streak span {
+    display: block;
+    text-align: center;
+    margin-top: 20px; }
+
+#p1Profile .streak {
+  margin-left: 10px; }
+
+#waiting .streak {
+  right: -35px;
+  bottom: -35px; }
+
+#result .streak {
+  right: -35px;
+  top: 160px; }
+
+/*
+ * Descs
+ */
+.descBlue {
+  color: #41bff2;
+  font-size: 18px;
+  text-transform: uppercase;
+  text-align: center; }
+
+.descWhite {
+  color: #FFFFFF;
+  font-size: 20px;
+  text-align: center;
+  text-transform: uppercase;
+  width: 100%; }
+
+.resultText.descBlue {
+  margin-top: 20px;
+  font-size: 30px; }
+
+/*
+ * Waitings
+ */
+#waitingDesc {
+  left: 70px;
+  top: 420px;
+  width: 200px; }
+
+/*
+ * Game Sign and staus
+ */
+.gwrap {
+  top: 150px;
+  z-index: 103; }
+
+#result .gwrap {
+  top: 100px; }
+
+.p1Game {
+  left: 40px; }
+
+.p2Game {
+  right: 40px; }
+
+.gStatus {
+  width: 100%;
+  height: 55px;
+  margin-bottom: 20px; }
+  .gStatus ul {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    width: 100%;
+    padding: 10px 60px 0; }
+    .gStatus ul li {
+      float: left;
+      background: transparent url("../img/ui/gstatus.png") left bottom no-repeat;
+      width: 44px;
+      height: 44px;
+      margin-right: 10px; }
+  .gStatus ul.win1 li:nth-child(1) {
+    background-position: left top; }
+  .gStatus ul.win2 li:nth-child(1), .gStatus ul.win2 li:nth-child(2) {
+    background-position: left top; }
+  .gStatus ul.win3 li:nth-child(1), .gStatus ul.win3 li:nth-child(2), .gStatus ul.win3 li:nth-child(3) {
+    background-position: left top; }
+
+.gs {
+  padding: 40px 0 0 55px; }
+
+/* ==========================================================================
+   Helper classes
+   ========================================================================== */
+/* ==========================================================================
+   Mobile
+   ========================================================================== */
+.mobile {
+  height: 100%;
+  min-height: 100%; }
+
+.mobile .descBlue {
+  font-size: 30px;
+  letter-spacing: 3px;
+  line-height: 55px; }
+
+.mobile .descWhite {
+  font-size: 25px;
+  letter-spacing: 2px; }
+
+.mobile #centerWrap {
+  height: 100%;
+  width: 600px;
+  margin-top: 0; }
+
+.mobile .circ {
+  width: 220px;
+  height: 220px; }
+
+.mobile .gs {
+  padding: 20px 0 0 30px; }
+
+.mobile .gCircXL {
+  background: transparent url("../img/ui/circBgSprite2.png") left center no-repeat; }
+
+.mobile .circXL {
+  background: transparent url("../img/ui/circXL2.png") center center no-repeat; }
+
+#waitingM .streak {
+  right: -35px;
+  bottom: -35px; }
+
+#ProfileMe {
+  top: 15%;
+  left: 50%;
+  margin-left: -140px;
+  text-align: center; }
+  #ProfileMe > span {
+    font-size: 40px;
+    line-height: 220px; }
+
+#waitingDescM {
+  top: 60%;
+  left: 50%;
+  width: 400px;
+  margin-left: -200px; }
+
+.circS {
+  width: 147px;
+  height: 147px;
+  background: transparent url("../img/ui/circS.png") left top no-repeat; }
+
+#ProfileOpp {
+  top: 35%;
+  left: 55%;
+  text-align: center; }
+  #ProfileOpp > span {
+    font-size: 20px;
+    line-height: 150px; }
+
+#readyBtnM {
+  left: 50%;
+  margin-left: -140px;
+  top: 54%;
+  line-height: 245px; }
+
+#oppoDesc {
+  width: 100%;
+  top: 40%; }
+
+.mobile #paper {
+  top: 60%;
+  right: 3%; }
+  .mobile #paper .sign {
+    background-position: -150px -348px; }
+.mobile #scissors {
+  top: 60%;
+  left: 3%; }
+  .mobile #scissors .sign {
+    background-position: -150px -162px; }
+.mobile #rock {
+  top: 31%;
+  left: 50%;
+  margin-left: -117px; }
+  .mobile #rock .sign {
+    background-position: -150px -526px; }
+.mobile #gameRoundCountM {
+  width: 100%;
+  text-align: center; }
+.mobile .sign {
+  width: 150px;
+  height: 170px;
+  background: transparent url("../img/ui/circSprite2.png") left top no-repeat; }
+.mobile .ready .sign {
+  background-position: -170px -816px; }
+
+.fl {
+  float: left; }
+
+.fr {
+  float: right; }
+
+.ti {
+  text-indent: -100%;
+  overflow: hidden;
+  border: 0;
+  background-color: transparent;
+  content: " "; }
+
+/*
+ * Image replacement
+ */
+.ir {
+  background-color: transparent;
+  border: 0;
+  overflow: hidden;
+  /* IE 6/7 fallback */
+  *text-indent: -9999px; }
+
+.ir:before {
+  content: "";
+  display: block;
+  width: 0;
+  height: 150%; }
+
+/*
+ * Hide from both screenreaders and browsers: h5bp.com/u
+ */
+.hidden {
+  display: none !important;
+  visibility: hidden; }
+
+.opao {
+  opacity: 0;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+  filter: alpha(opacity=0); }
+
+/*
+ * Hide only visually, but have it available for screenreaders: h5bp.com/v
+ */
+.visuallyhidden {
+  border: 0;
+  clip: rect(0 0 0 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px; }
+
+/*
+ * Extends the .visuallyhidden class to allow the element to be focusable
+ * when navigated to via the keyboard: h5bp.com/p
+ */
+.visuallyhidden.focusable:active,
+.visuallyhidden.focusable:focus {
+  clip: auto;
+  height: auto;
+  margin: 0;
+  overflow: visible;
+  position: static;
+  width: auto; }
+
+/*
+ * Hide visually and from screenreaders, but maintain layout
+ */
+.invisible {
+  visibility: hidden; }
+
+/*
+ * Clearfix: contain floats
+ *
+ * For modern browsers
+ * 1. The space content is one way to avoid an Opera bug when the
+ *    `contenteditable` attribute is included anywhere else in the document.
+ *    Otherwise it causes space to appear at the top and bottom of elements
+ *    that receive the `clearfix` class.
+ * 2. The use of `table` rather than `block` is only necessary if using
+ *    `:before` to contain the top-margins of child elements.
+ */
+.clearfix:before,
+.clearfix:after {
+  content: " ";
+  /* 1 */
+  display: table;
+  /* 2 */ }
+
+.clearfix:after {
+  clear: both; }
+
+/*
+ * For IE 6/7 only
+ * Include this rule to trigger hasLayout and contain floats.
+ */
+.clearfix {
+  *zoom: 1; }
+
+/*
+ *  ABS
+ */
+.abs {
+  position: absolute; }
+
+/* ====================
+    added elements
+======================*/
+#readyWait {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.9);
+  color: #fff;
+  display: none;
+  text-align: center;
+  z-index: 999; }
+  #readyWait p {
+    font-size: 30px;
+    line-height: 50px;
+    position: absolute;
+    top: 50%;
+    width: 100%;
+    text-align: center;
+    margin-top: -25px; }
+
+#countDown {
+  position: absolute;
+  width: 100%;
+  height: 160px;
+  top: 50%;
+  left: 0;
+  margin-top: -80px;
+  background-color: rgba(0, 0, 0, 0.8);
+  font-size: 60px;
+  color: #fff;
+  display: none;
+  text-align: center;
+  z-index: 99; }
+
+#flashLayer {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background-color: rgba(255, 255, 255, 0.5);
+  display: none;
+  z-index: 999; }
+
+/* ==========================================================================
+   EXAMPLE Media Queries for Responsive Design.
+   These examples override the primary ('mobile first') styles.
+   Modify as content requires.
+   ========================================================================== */
+@media only screen and (min-width: 35em) {
+  /* Style adjustments for viewports that meet the condition */ }
+@media print, (-o-min-device-pixel-ratio: 5 / 4), (-webkit-min-device-pixel-ratio: 1.25), (min-resolution: 120dpi) {
+  /* Style adjustments for high resolution devices */ }
+/* ==========================================================================
+   Print styles.
+   Inlined to avoid required HTTP connection: h5bp.com/r
+   ========================================================================== */
+@media print {
+  * {
+    background: transparent !important;
+    color: #000 !important;
+    /* Black prints faster: h5bp.com/s */
+    box-shadow: none !important;
+    text-shadow: none !important; }
+
+  a,
+  a:visited {
+    text-decoration: underline; }
+
+  a[href]:after {
+    content: " (" attr(href) ")"; }
+
+  abbr[title]:after {
+    content: " (" attr(title) ")"; }
+
+  /*
+   * Don't show links for images, or javascript/internal links
+   */
+  .ir a:after,
+  a[href^="javascript:"]:after,
+  a[href^="#"]:after {
+    content: ""; }
+
+  pre,
+  blockquote {
+    border: 1px solid #999;
+    page-break-inside: avoid; }
+
+  thead {
+    display: table-header-group;
+    /* h5bp.com/t */ }
+
+  tr,
+  img {
+    page-break-inside: avoid; }
+
+  img {
+    max-width: 100% !important; }
+
+  @page {
+    margin: 0.5cm; }
+  p,
+  h2,
+  h3 {
+    orphans: 3;
+    widows: 3; }
+
+  h2,
+  h3 {
+    page-break-after: avoid; } }
