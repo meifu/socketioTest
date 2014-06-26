@@ -12,17 +12,17 @@
         <script src="js/vendor/modernizr-2.6.2.min.js"></script>
 	</head>
 	<body>
-		<h1>Let's Play</h1>
-		<p>Hello! <span id="username"><%= user.username %></span></p>
-		<div id="initialScreen">
+		
+		<div id="hostGameArea">
+			<h1>Let's Play</h1>
+			<p>Hello! <span id="username"><%= user.username %></span></p>
 			<p>create a new game or join an existed game</p>
 			<button class="btn" id="createNewGame">create</button>
 			<button class="btn" id="btnJoinGame">join</button>	
 		</div>
 		
-		<div id="hostGameArea"></div>
-		<div id="gameWaitArea"></div>
-		<div id="gameStartArea"></div>
+		<!-- <div id="gameWaitArea"></div>
+		<div id="gameStartArea"></div> -->
 
 		<!-- This screen appears when a user clicks "CREATE" on the Title Screen -->
 	    <script id="create-game-template" type="text/template">
@@ -44,35 +44,40 @@
 
 	    <!-- This scrreen appears when a player clicks "JOIN" on the Title Screen -->
 	    <script id="join-game-template" type="text/template">
+	    	<p>Hello!<span id="username2"><span></p>
         	<input type="text" name="" value="" placeholder="enter game ID" id="inputGameId">
 	        <button type="" id="btnStart">Start</button>
 	    </script>
 
 	    <script id="game-wait-host-template" type="text/template">
-	    	<div id="centerWrap">
-	            <h1 id="logoS" class="abs"><img src="/img/ui/logoS.png" alt="Versus Rock - Rock Papeer Scissors in IO"></h1>
-	            <div id="vibe" class="abs"> </div>
-	            <div id="ProfileL"class="circXL circ abs prof">
-	                <div class="streak abs">
-	                    <span>
-	                        
-	                    </span>
-	                </div>
-	            </div>
-	            <div id="waitingDesc" class="descBlue abs">
-	                Please wait for a new opponent to join game
-	            </div> 
-	            <div id="ProfileR"class="circXL circ abs prof opao">
+	    	<div id="waiting">
+		    	<div id="home">
+			    	<div id="centerWrap">
+			            <h1 id="logoS" class="abs"><img src="/img/ui/logoS.png" alt="Versus Rock - Rock Papeer Scissors in IO"></h1>
+			            <div id="vibe" class="abs"> </div>
+			            <div id="ProfileL"class="circXL circ abs prof">
+			                <div class="streak abs">
+			                    <span>
+			                        
+			                    </span>
+			                </div>
+			            </div>
+			            <div id="waitingDesc" class="descBlue abs">
+			                Please wait for a new opponent to join game
+			            </div> 
+			            <div id="ProfileR"class="circXL circ abs prof opao">
 
-	            </div>
-	            <div id="QRXL" class="abs QR"><img src="/img/qrXL.png" alt="QR"></div>
-	            <div id="readyBtn" class="abs circ descBlue opao">
-	                Press Ready <br> On your Device To Start
-	                img
-	                <div id="readyL" class="readyEmmit abs opao"></div>
-	                <div id="readyR" class="readyEmmit abs opao"></div>
-	            </div>
-	        </div>
+			            </div>
+			            <div id="QRXL" class="abs QR"><img src="/img/qrXL.png" alt="QR"></div>
+			            <div id="readyBtn" class="abs circ descBlue opao">
+			                Press Ready <br> On your Device To Start
+			                img
+			                <div id="readyL" class="readyEmmit abs opao"></div>
+			                <div id="readyR" class="readyEmmit abs opao"></div>
+			            </div>
+			        </div>
+			    </div>
+			</div>
 	    </script>
 
 	    <script id="game-wait-player-template" type="text/template">
@@ -260,5 +265,9 @@
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 		<script src="/socket.io/socket.io.js"></script>
 		<script src="/clientSocket.js"></script>
+		<script src="http://cdnjs.cloudflare.com/ajax/libs/gsap/1.11.4/plugins/CSSPlugin.min.js"></script>
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/gsap/1.11.4/easing/EasePack.min.js"></script>
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/gsap/1.11.4/TweenLite.min.js"></script>
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/gsap/1.11.4/TimelineLite.min.js"></script>
 	</body>
 </html>

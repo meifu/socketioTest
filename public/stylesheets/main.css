@@ -265,7 +265,8 @@ body {
 
 #ProfileL {
   left: 40px;
-  text-align: center; }
+  text-align: center;
+  color: #ccc; }
 
 #ProfileR {
   right: 40px;
@@ -273,7 +274,8 @@ body {
 
 #ProfileL > span, #ProfileR > span {
   font-size: 40px;
-  line-height: 260px; }
+  line-height: 260px;
+  color: #ccc; }
 
 .streak {
   width: 147px;
@@ -415,8 +417,9 @@ body {
   margin-left: -140px;
   text-align: center; }
   #ProfileMe > span {
-    font-size: 40px;
-    line-height: 220px; }
+    font-size: 60px;
+    line-height: 280px;
+    color: #ccc; }
 
 #waitingDescM {
   top: 60%;

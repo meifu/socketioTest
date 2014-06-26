@@ -6,6 +6,9 @@ var roomObj = function(n, game_id) {
   this.numbers = n || 0;
   this.gameId = game_id || '';
   this.hostId = '';
+  this.leftPerson = {name: '', uuid: '', point: 0};
+  this.rightPerson = {name: '', uuid: '', point: 0};
+  this.readyNumber = 0;
 }
 
 exports.initGame = function(sio, socket){
@@ -18,6 +21,7 @@ exports.initGame = function(sio, socket){
 
   // Player Events
   gameSocket.on('playerJoinGame', playerJoinGame);
+  gameSocket.on('updateReady', updateReadyStatus);
 }
 
 
@@ -63,6 +67,20 @@ function hostCreateNewGame() {
   
 };
 
+function updateReadyStatus(data) { //position, gameId
+  if (roomPool[data.gameId]) {
+    roomPool[data.gameId].readyNumber = roomPool[data.gameId].readyNumber + 1;
+    io.sockets.in(data.gameId).emit('readyLightOn', {position: data.position/*, readyNumbers: roomPool[data.gameId].readyNumber*/});
+
+    if (roomPool[data.gameId].readyNumber === 2) {
+      io.sockets.in(data.gameId).emit('goInToTheGame', {});
+    }
+  } else {
+    console.log('SERVER find no room');
+  }
+  
+}
+
 /* *****************************
    *                           *
    *     PLAYER FUNCTIONS      *
@@ -98,11 +116,23 @@ function playerJoinGame(data) {
       
       console.log('connected socket: ' + io.sockets.connected[sock.id]);
 
-      // Emit an event notifying the clients that the player has joined the room.
-      io.sockets.in(data.gameId).emit('playerJoinedRoom', data);
+      if (room.numbers == 1) {
+        room.leftPerson.name = data.playerName;  //如果他是第一個進來的就算在左邊
+        room.leftPerson.uuid = data.playerUuid;
+        data.leftPoint = room.leftPerson.point;  //傳他的point到frontend
+        io.sockets.in(data.gameId).emit('playerJoinedRoom', data);
+      }
 
       if (room.numbers == 2) {
-        io.sockets.in(data.gameId).emit('startGame', data);
+        room.rightPerson.name = data.playerName; //如果他是第一個進來的就算在右邊
+        room.rightPerson.uuid = data.playerUuid;
+        data.leftName = room.leftPerson.name;
+        data.leftPoint = room.leftPerson.point;
+        data.leftUuid = room.leftPerson.uuid;
+        data.rightName = room.rightPerson.name;
+        data.rightUuid = room.rightPerson.uuid;
+        // io.sockets.in(data.gameId).emit('startGame', data);
+        io.sockets.in(data.gameId).emit('secondJoin', data);
       }
 
     } else { //room.number > 2
