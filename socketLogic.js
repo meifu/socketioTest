@@ -9,6 +9,12 @@ var roomObj = function(n, game_id) {
   this.leftPerson = {name: '', uuid: '', point: 0};
   this.rightPerson = {name: '', uuid: '', point: 0};
   this.readyNumber = 0;
+  this.status = 0; //0: not begin, 1: round 1, 2: round 2, 3: round 3 
+  this.playersRecord = {
+    round1: {left: '', right: '', winner: ''},
+    round2: {left: '', right: '', winner: ''},
+    round3: {left: '', right: '', winner: ''}
+  }
 }
 
 exports.initGame = function(sio, socket){
@@ -18,10 +24,15 @@ exports.initGame = function(sio, socket){
 
   // Host Events
   gameSocket.on('hostCreateNewGame', hostCreateNewGame);
+  gameSocket.on('playerMakeChoice', recordPlayerChoice);
+  gameSocket.on('clearRound', clearOneRound);
 
   // Player Events
   gameSocket.on('playerJoinGame', playerJoinGame);
   gameSocket.on('updateReady', updateReadyStatus);
+
+  //listRoom
+  gameSocket.on('askRooms', getRoomsInfo);
 }
 
 
@@ -73,12 +84,48 @@ function updateReadyStatus(data) { //position, gameId
     io.sockets.in(data.gameId).emit('readyLightOn', {position: data.position/*, readyNumbers: roomPool[data.gameId].readyNumber*/});
 
     if (roomPool[data.gameId].readyNumber === 2) {
-      io.sockets.in(data.gameId).emit('goInToTheGame', {});
+      roomPool[data.gameId].status = 1;
+      io.sockets.in(data.gameId).emit('goInToTheGame', {
+        leftName: roomPool[data.gameId].leftPerson.name,
+        leftPoint: roomPool[data.gameId].leftPerson.point,
+        rightName: roomPool[data.gameId].rightPerson.name,
+        round: roomPool[data.gameId].status
+      });
     }
   } else {
     console.log('SERVER find no room');
   }
   
+}
+
+function recordPlayerChoice(data) {
+  // console.log('gameID: ' + data.gameId);
+  // console.log('playerId: ' + data.playerId);
+  // console.log('game status: ' + roomPool[data.gameId].status);
+  var currentPosition = '';
+  var currentRound = 'round' + roomPool[data.gameId].status;
+  if (data.playerId === roomPool[data.gameId].leftPerson.uuid) {
+    console.log('left player made choice');
+    roomPool[data.gameId].playersRecord[currentRound]['left'] = data.choice;
+    currentPosition = 'left';
+  } else if (data.playerId === roomPool[data.gameId].rightPerson.uuid) {
+    console.log('right player made choice');
+    roomPool[data.gameId].playersRecord[currentRound]['right'] = data.choice;
+    currentPosition = 'right';
+  }
+  console.log('test current room: ' + roomPool[data.gameId].playersRecord[currentRound]['left']);
+  console.log('test current room: ' + roomPool[data.gameId].playersRecord[currentRound]['right']);
+  io.sockets.in(data.gameId).emit('showPlayerChoice', {choicePosition: currentPosition, choice: data.choice});
+
+  //如果兩個玩家都已經作出決定
+  if (roomPool[data.gameId].playersRecord[currentRound]['left'] !== '' && roomPool[data.gameId].playersRecord[currentRound]['right'] !== '') {
+    console.log('Both two players made choices');
+    //判斷誰贏
+    var winner = judgeWinner(roomPool[data.gameId].playersRecord[currentRound]['left'], roomPool[data.gameId].playersRecord[currentRound]['right']);
+    roomPool[data.gameId].playersRecord[currentRound]['winner'] = winner;
+    var winCounts = getWinRounds(data.gameId);
+    io.sockets.in(data.gameId).emit('showBothChoices', {leftChoice: roomPool[data.gameId].playersRecord[currentRound]['left'], rightChoice: roomPool[data.gameId].playersRecord[currentRound]['right'], winRounds: winCounts});
+  }
 }
 
 /* *****************************
@@ -144,4 +191,69 @@ function playerJoinGame(data) {
     console.log('SERVER: room not exist');
   }
   
+}
+
+/* *****************************
+   *                           *
+   *        GAME LOGIC         *
+   *                           *
+   ***************************** */
+function judgeWinner(leftChoice, rightChoice) {
+  var rockPaperScissorsCode = {'scissors': 0, 'rock': 1, 'paper': 2};
+  var pssRule = [[0, -1, 1], [1, 0, -1], [-1, 1, 0]];
+  var result = pssRule[rockPaperScissorsCode[leftChoice]][rockPaperScissorsCode[rightChoice]];
+  console.log('SERVER result: ' + result);
+  if (result > 0) {
+    return 'left';
+  } else if (result < 0) {
+    return 'right';
+  } else {
+    return 0;
+  }
+}
+
+function getWinRounds(gameId) {
+  var winNumbers = {leftWin: 0, rightWin: 0};
+  for (var i = 0; i < 3; i++ ) {
+    console.log('SERVER check round: ' + i);
+    console.log('SERVER check round: ' + roomPool[gameId].playersRecord['round' + (i+1)]);
+    if (roomPool[gameId].playersRecord['round' + (i+1)].winner === 'left') {
+      winNumbers.leftWin = winNumbers.leftWin + 1;
+    } else if (roomPool[gameId].playersRecord['round' + (i+1)].winner === 'right') {
+      winNumbers.rightWin = winNumbers.rightWin + 1;
+    }
+  }
+
+  return winNumbers;
+  
+}
+
+function clearOneRound(data) { //data.gameId
+  console.log('checkroom: ' + roomPool[data.gameId].gameId);
+  console.log('checkroom: ' + roomPool[data.gameId].leftPerson.uuid);
+  console.log('checkroom: ' + roomPool[data.gameId].rightPerson.uuid);
+  console.log('checkroom: ' + roomPool[data.gameId].playersRecord.round1.left + ' , ' + roomPool[data.gameId].playersRecord.round1.right + ' , ' + roomPool[data.gameId].playersRecord.round1.winner);
+  console.log('checkroom: ' + roomPool[data.gameId].playersRecord.round2.left + ' , ' + roomPool[data.gameId].playersRecord.round2.right + ' , ' + roomPool[data.gameId].playersRecord.round2.winner);
+  console.log('checkroom: ' + roomPool[data.gameId].playersRecord.round3.left + ' , ' + roomPool[data.gameId].playersRecord.round3.right + ' , ' + roomPool[data.gameId].playersRecord.round3.winner);
+  
+}
+
+
+/* *****************************
+   *                           *
+   *      ADMIN FUNCTIONS      *
+   *                           *
+   ***************************** */
+function getRoomsInfo() {
+  console.log('SERVER GETROOMSINFO');
+  // console.log(Object.keys(io));
+  // console.log(Object.keys(io.sockets));
+  console.log(Object.keys(io.nsps));
+  // console.log(io.sockets.sockets);
+  for (nsp in io.nsps) {
+    console.log(io.nsps[nsp].connected);
+  }
+
+  this.emit('showRoom', Object.keys(io.nsps));
+
 }

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<title>Versus Rock</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+	</head>
+	<body>
+		<p>list all rooms</p>
+		<ul>
+			
+		</ul>
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+	<script src="/socket.io/socket.io.js"></script>
+	<script>
+;
+jQuery(function($){ 
+	'use strict';
+	var socket = io.connect('http://localhost');
+	socket.on('connected', function(data) {
+		console.log(data);
+		// console.log('try get some data: ' + io);
+		socket.emit('askRooms', {});
+	});
+
+	socket.on('showRoom', function(data) {
+		for (var i = 0; i < data.length; i++) {
+			$('ul').append('<li>' + data[i] + '</li>');
+		}
+	});
+
+}($));
+	</script>
+	</body>
+</html>

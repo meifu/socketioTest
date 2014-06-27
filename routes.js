@@ -83,12 +83,16 @@ function Routes (app) {
 		res.render('fail', {});
 	});
 
-	app.get('/join', ensureAuthenticated, function(req, res){
-		res.render('join', {user: req.user});
-	});
+	// app.get('/join', ensureAuthenticated, function(req, res){
+	// 	res.render('join', {user: req.user});
+	// });
 
 	app.get('/game', ensureAuthenticated, function(req, res){
 		res.render('game', {user: req.user});
+	});
+
+	app.get('/listRoom', function(req, res) {
+		res.render('listRoom', {});
 	});
 
     function findById(id, fn) {

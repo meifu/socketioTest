@@ -15,6 +15,8 @@ jQuery(function($){
             IO.socket.on('startGame', IO.startGame);
             IO.socket.on('readyLightOn', IO.readyLightOn);
             IO.socket.on('goInToTheGame', IO.goToGame);
+            IO.socket.on('showPlayerChoice', IO.showChoice);
+            IO.socket.on('showBothChoices', IO.showBothChoices);
         },
         onConnected : function(data) {
             // Cache a copy of the client's socket.IO session ID on the App
@@ -38,6 +40,7 @@ jQuery(function($){
         },
         onTooManyPlayers : function(data) {
             console.log('too many: ' + data);
+            $('#flashLayer').css('display', 'block');
         },
         startGame : function(data) {
             // $('#initialScreen').fadeOut();
@@ -50,6 +53,12 @@ jQuery(function($){
         },
         goToGame : function(data) {
             App[App.myRole].goInToGame(data);
+        },
+        showChoice : function(data) {
+            App.Host.showPlayerChoice(data);
+        },
+        showBothChoices : function(data) {
+            App[App.myRole].showTwoPlayersChoices(data);
         }
 
     }
@@ -87,6 +96,7 @@ jQuery(function($){
             App.$doc.on('click', '#btnJoinGame', App.Player.onJoinClick);
             App.$doc.on('click', '#btnStart', App.Player.onPlayerStartClick);
             App.$doc.on('click', '#readyBtnM', App.Host.updateReady);
+            App.$doc.on('click', '.choice', App.sendChoice);
         },
 
         /* *************************************
@@ -98,6 +108,15 @@ jQuery(function($){
             };
             return (S4() + S4() + "-" + S4() + "-" + S4() + "-" + S4() + "-" + S4() + S4() + S4());
         },
+
+        sendChoice: function(e) { 
+            // console.log('player id: ' + App.Player.myId);
+            // console.log('click this: ' + $(e.target).parents('.choice').attr('id'));
+            $('#flashLayer').css('display', 'block');
+            var playerChoice = $(e.target).parents('.choice').attr('id');
+            IO.socket.emit('playerMakeChoice', {choice: playerChoice, playerId: App.Player.myId, gameId: App.gameId});
+        },
+
         /* ******************************
         *         HOST CODE             *
         ******************************* */
@@ -130,15 +149,10 @@ jQuery(function($){
 
             updateWaiting: function(data) { //data.playerName, data.gameId, data.leftPoint
                 // console.log('Host data numbers: ' + data.numbersInRoom);
-                // $('#hostGameArea').fadeOut();
                 $('#hostGameArea').html(App.$gameHostWaitTemplate);
                 $('#ProfileL').append('<span>' + data.playerName + '</span>');
                 $('#ProfileL').find('.streak').find('span').html(data.leftPoint);
-                // TweenLite.to(App.$readyL, 0.5, {opacity:"1"});
-            },
-
-            gameStartInit: function(data) {
-                
+                $('#QRXL').append('<input type="text" value="' + data.gameId + '">');                
             },
 
             secondPlayerJoin: function(data) {
@@ -176,10 +190,41 @@ jQuery(function($){
                 // }
                 
             },
-            goInToGame: function() {
+            goInToGame: function(data) {
                 window.setTimeout(function(){
                     $('#hostGameArea').html(App.$gameHostStartTemplate);
+                    $('#p1Profile').find('.gProfile').eq(0).append('<span>' + data.leftName + '</span>');
+                    $('#p2Profile').find('.gProfile').eq(0).append('<span>' + data.rightName + '</span>');
+                    $('#p1Profile').find('.streak').eq(0).append('<span>' + data.leftPoint + '<span>');
                 }, 800);
+            },
+
+            showPlayerChoice: function(data) {
+                console.log('current Pos: ' + data.choicePosition + ', current Choice: ' + data.choice);
+                if (data.choicePosition === 'left') {
+                    $('.p1Game').find('.gCircXL').eq(0).addClass('ready');
+                } else if (data.choicePosition === 'right') {
+                    $('.p2Game').find('.gCircXL').eq(0).addClass('ready');
+                }
+            },
+
+            showTwoPlayersChoices: function(data) {
+                console.log('two win counts: ' + data.winRounds.leftWin);
+                console.log('two win counts: ' + data.winRounds.rightWin);
+                window.setTimeout(function(){
+                    $('.p1Game').find('.gCircXL').eq(0).addClass(data.leftChoice);
+                    $('.p2Game').find('.gCircXL').eq(0).addClass(data.rightChoice);
+                    
+                    $('.p1Game').find('.gStatus').eq(0).find('ul').eq(0).addClass('win' + data.winRounds.leftWin);
+                    $('.p2Game').find('.gStatus').eq(0).find('ul').eq(0).addClass('win' + data.winRounds.rightWin);
+                    
+                }, 2000);
+                window.setTimeout(function(){
+                    IO.socket.emit('clearRound', {gameId: App.gameId});
+                    $('.p1Game').find('.gCircXL').eq(0).attr('class', 'gs gCircXL circ');
+                    $('.p2Game').find('.gCircXL').eq(0).attr('class', 'gs gCircXL circ');
+                    $('#round').html() = parseInt($('#round').html()) + 1;
+                }, 4000);
             }
         },
 
@@ -258,10 +303,24 @@ jQuery(function($){
             gameStartInit: function(data) {
                 $('#gameWaitArea').html(App.$gamePlayerStartTemplate);
             },
-            goInToGame: function() {
+
+            goInToGame: function(data) {
                 window.setTimeout(function(){
                     $('#hostGameArea').html(App.$gamePlayerStartTemplate);
+                    $('#hostGameArea').addClass('mobile');
+                    $('#p1Profile').find('.gProfile').eq(0).append('<span>' + data.leftName + '</span>');
+                    $('#p2Profile').find('.gProfile').eq(0).append('<span>' + data.rightName + '</span>');
+                    $('#p1Profile').find('.streak').eq(0).append('<span>' + data.leftPoint + '</span>');
                 }, 800);
+            },
+
+            showTwoPlayersChoices: function(data) {
+                window.setTimeout(function(){
+                    $('#flashLayer').css('display', 'none');
+                    $('#p1Profile').find('.gStatus').eq(0).find('ul').eq(0).addClass('win' + data.winRounds.leftWin);
+                    $('#p2Profile').find('.gStatus').eq(0).find('ul').eq(0).addClass('win' + data.winRounds.rightWin);
+                }, 2000);
+                
             }
 
         },

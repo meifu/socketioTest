@@ -261,7 +261,8 @@ body {
   text-align: center; }
   .gProfile > span {
     font-size: 20px;
-    line-height: 150px; }
+    line-height: 150px;
+    color: #ccc; }
 
 #ProfileL {
   left: 40px;
@@ -390,7 +391,7 @@ body {
   letter-spacing: 2px; }
 
 .mobile #centerWrap {
-  height: 100%;
+  /*height: 100%;*/
   width: 600px;
   margin-top: 0; }
 
@@ -626,7 +627,7 @@ body {
   height: 100%;
   top: 0;
   left: 0;
-  background-color: rgba(255, 255, 255, 0.5);
+  background-color: rgba(0, 0, 0, 0.5);
   display: none;
   z-index: 999; }
 
