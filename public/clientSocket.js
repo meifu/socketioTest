@@ -223,7 +223,7 @@ jQuery(function($){
                     IO.socket.emit('clearRound', {gameId: App.gameId});
                     $('.p1Game').find('.gCircXL').eq(0).attr('class', 'gs gCircXL circ');
                     $('.p2Game').find('.gCircXL').eq(0).attr('class', 'gs gCircXL circ');
-                    $('#round').html() = parseInt($('#round').html()) + 1;
+                    $('#round').html(parseInt($('#round').html()) + 1);
                 }, 4000);
             }
         },

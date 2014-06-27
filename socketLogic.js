@@ -235,7 +235,11 @@ function clearOneRound(data) { //data.gameId
   console.log('checkroom: ' + roomPool[data.gameId].playersRecord.round1.left + ' , ' + roomPool[data.gameId].playersRecord.round1.right + ' , ' + roomPool[data.gameId].playersRecord.round1.winner);
   console.log('checkroom: ' + roomPool[data.gameId].playersRecord.round2.left + ' , ' + roomPool[data.gameId].playersRecord.round2.right + ' , ' + roomPool[data.gameId].playersRecord.round2.winner);
   console.log('checkroom: ' + roomPool[data.gameId].playersRecord.round3.left + ' , ' + roomPool[data.gameId].playersRecord.round3.right + ' , ' + roomPool[data.gameId].playersRecord.round3.winner);
+  if (roomPool[data.gameId].status <= 3) {
+    roomPool[data.gameId].status = roomPool[data.gameId].status + 1;  
+  }
   
+
 }
 
 
