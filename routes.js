@@ -46,7 +46,8 @@ function Routes (app) {
 	passport.use(new FacebookStrategy({
 		clientID: "511239108925093",
 		clientSecret: "31e5ef5790134a271bb146ca7c6d9dd0",
-		callbackURL: "http://localhost:3000/auth/facebook/callback"
+		// callbackURL: "http://localhost:3000/auth/facebook/callback"
+		callbackURL: "http://60.199.162.87:3000/auth/facebook/callback"
 		},
 		function(accessToken, refreshToken, profile, done){
 			process.nextTick(function() {

@@ -148,7 +148,7 @@ jQuery(function($){
                 // Fill the game screen with the appropriate HTML
                 App.$hostGameArea.html(App.$newGameTemplate);
                 // Display the URL on screen
-                $('#roomlink img').attr('src', 'http://chart.apis.google.com/chart?cht=qr&chs=200x200&chl=http://localhost:3000/');
+                $('#roomlink img').attr('src', 'http://chart.apis.google.com/chart?cht=qr&chs=200x200&chl=http://60.199.162.87:3000/');
                 // Show the gameId / room id on screen
                 $('#shareUrl').val(App.gameId);
             },
@@ -234,7 +234,7 @@ jQuery(function($){
                 $('#hostGameArea').html(App.$gameHostWaitTemplate);
                 $('#ProfileL').append('<span>' + data.finalWinnerName + '</span>');
                 $('#ProfileL').find('.streak').eq(0).find('span').html(data.finalWinnerPoint);
-                $('#QRXL').find('img').eq(0).attr('src', 'http://chart.apis.google.com/chart?cht=qr&chs=200x200&chl=http://localhost:3000/');
+                $('#QRXL').find('img').eq(0).attr('src', 'http://chart.apis.google.com/chart?cht=qr&chs=200x200&chl=http://60.199.162.87:3000/');
             }
         },
 
