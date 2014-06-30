@@ -30,6 +30,7 @@ exports.initGame = function(sio, socket){
   // Player Events
   gameSocket.on('playerJoinGame', playerJoinGame);
   gameSocket.on('updateReady', updateReadyStatus);
+  gameSocket.on('iamlose', kickoffPlayer);
 
   //listRoom
   gameSocket.on('askRooms', getRoomsInfo);
@@ -104,6 +105,7 @@ function recordPlayerChoice(data) {
   // console.log('game status: ' + roomPool[data.gameId].status);
   var currentPosition = '';
   var currentRound = 'round' + roomPool[data.gameId].status;
+  var finalWinner, finalWinnerName, finalWinnerId;
   if (data.playerId === roomPool[data.gameId].leftPerson.uuid) {
     console.log('left player made choice');
     roomPool[data.gameId].playersRecord[currentRound]['left'] = data.choice;
@@ -119,12 +121,37 @@ function recordPlayerChoice(data) {
 
   //如果兩個玩家都已經作出決定
   if (roomPool[data.gameId].playersRecord[currentRound]['left'] !== '' && roomPool[data.gameId].playersRecord[currentRound]['right'] !== '') {
-    console.log('Both two players made choices');
+    console.log('Both two players made choices and current round is: ' + roomPool[data.gameId].status);
     //判斷誰贏
     var winner = judgeWinner(roomPool[data.gameId].playersRecord[currentRound]['left'], roomPool[data.gameId].playersRecord[currentRound]['right']);
-    roomPool[data.gameId].playersRecord[currentRound]['winner'] = winner;
+    
+    if (winner !== 0) { //如果不是平手
+      roomPool[data.gameId].playersRecord[currentRound]['winner'] = winner; //記錄此輪的winner
+      if (roomPool[data.gameId].status <= 3) {
+        console.log('status + 1');
+        roomPool[data.gameId].status = roomPool[data.gameId].status + 1;  //status + 1
+      }
+    } else { //如果是平手
+      console.log('equal');
+      roomPool[data.gameId].playersRecord[currentRound]['left'] = '';
+      roomPool[data.gameId].playersRecord[currentRound]['right'] = '';
+    }
+
     var winCounts = getWinRounds(data.gameId);
     io.sockets.in(data.gameId).emit('showBothChoices', {leftChoice: roomPool[data.gameId].playersRecord[currentRound]['left'], rightChoice: roomPool[data.gameId].playersRecord[currentRound]['right'], winRounds: winCounts});
+    if (roomPool[data.gameId].status > 3) {  //如果已經玩到最後一輪
+      if (winCounts.leftWin > winCounts.rightWin) {
+        finalWinner = 'left';
+      } else {
+        finalWinner = 'right';
+      }
+      roomPool[data.gameId][finalWinner + 'Person'].point ++;
+      finalWinnerName = roomPool[data.gameId][finalWinner + 'Person'].name;
+      finalWinnerId = roomPool[data.gameId][finalWinner + 'Person'].uuid;
+      io.sockets.in(data.gameId).emit('finalResult', {finalWinnerSide: finalWinner, finalWinnerName: roomPool[data.gameId][finalWinner + 'Person'].name, finalWinnerPoint: roomPool[data.gameId][finalWinner + 'Person'].point});
+      //reset roomObj information
+      resetRoom(data.gameId, finalWinnerName, finalWinnerId, roomPool[data.gameId][finalWinner + 'Person'].point);
+    }
   }
 }
 
@@ -152,11 +179,10 @@ function playerJoinGame(data) {
 
     room.numbers += 1;
     data.numbersInRoom = room.numbers;
+    // Join the room
+    sock.join(data.gameId);
 
     if (room.numbers <= 2) {
-
-      // Join the room
-      sock.join(data.gameId);
 
       //tell host screen to update numbers
       var host_id = roomPool[data.gameId].hostId;
@@ -191,6 +217,11 @@ function playerJoinGame(data) {
     console.log('SERVER: room not exist');
   }
   
+}
+
+function kickoffPlayer(data) {
+  console.log('kick off in room: ' + data.gameId);
+  this.leave(data.gameId);
 }
 
 /* *****************************
@@ -235,11 +266,25 @@ function clearOneRound(data) { //data.gameId
   console.log('checkroom: ' + roomPool[data.gameId].playersRecord.round1.left + ' , ' + roomPool[data.gameId].playersRecord.round1.right + ' , ' + roomPool[data.gameId].playersRecord.round1.winner);
   console.log('checkroom: ' + roomPool[data.gameId].playersRecord.round2.left + ' , ' + roomPool[data.gameId].playersRecord.round2.right + ' , ' + roomPool[data.gameId].playersRecord.round2.winner);
   console.log('checkroom: ' + roomPool[data.gameId].playersRecord.round3.left + ' , ' + roomPool[data.gameId].playersRecord.round3.right + ' , ' + roomPool[data.gameId].playersRecord.round3.winner);
-  if (roomPool[data.gameId].status <= 3) {
-    roomPool[data.gameId].status = roomPool[data.gameId].status + 1;  
+  
+}
+
+function resetRoom(gameId, newName, newUuid, newPoint) {
+  roomPool[gameId].numbers = 1;
+  roomPool[gameId].leftPerson.name = newName;
+  roomPool[gameId].leftPerson.uuid = newUuid;
+  roomPool[gameId].leftPerson.point = newPoint;
+  roomPool[gameId].rightPerson.name = '';
+  roomPool[gameId].rightPerson.uuid = '';
+  roomPool[gameId].rightPerson.point = 0;
+  roomPool[gameId].readyNumber = 0;
+  roomPool[gameId].status = 0;
+  for (var i = 0; i < 3; i ++) {
+    roomPool[gameId].playersRecord['round' + (i+1)].left = '';
+    roomPool[gameId].playersRecord['round' + (i+1)].right = '';
+    roomPool[gameId].playersRecord['round' + (i+1)].winner = '';   
   }
   
-
 }
 
 
@@ -252,12 +297,13 @@ function getRoomsInfo() {
   console.log('SERVER GETROOMSINFO');
   // console.log(Object.keys(io));
   // console.log(Object.keys(io.sockets));
-  console.log(Object.keys(io.nsps));
+  // console.log(Object.keys(io.nsps));
   // console.log(io.sockets.sockets);
-  for (nsp in io.nsps) {
-    console.log(io.nsps[nsp].connected);
-  }
+  // for (nsp in io.nsps) {
+  //   console.log(Object.keys(io.nsps[nsp].connected));
+  // }
 
-  this.emit('showRoom', Object.keys(io.nsps));
+  // this.emit('showRoom', Object.keys(io.nsps));
+  this.emit('showRoom', roomPool);
 
 }

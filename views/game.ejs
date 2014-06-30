@@ -263,6 +263,36 @@
 	        
 	    </script>
 
+	    <script id="win-wait-player-template" type="text/template">
+	    	<div id="centerWrap">
+	            <h1 id="logoS" class="abs"><img src="/img/ui/logoS.png" alt="Versus Rock - Rock Papeer Scissors in IO"></h1>
+	            <div id="ProfileMe" class="circXL circ abs prof">
+	                <div class="streak abs">
+	                    <span>
+	                        
+	                    </span>
+	                </div>
+	            </div>
+	            <div id="waitingDescM" class="descBlue abs">
+	                Please wait for <br>a Opponent to join
+	            </div>
+	            <div id="oppoDesc" class="abs opao">
+	                <div id="playingDesc" class="descBlue fl">Playing Against</div>
+	                <div id="oppoName" class="descBlue fr"></div>
+	            </div>
+	            <div id="ProfileOpp" class="circS abs opao"></div>
+	            <div id="readyBtnM" class="circXL circ abs opao descBlue">
+	                READY
+	            </div>
+	            <div class="descWhite opao">Press Ready to Begin</div>
+	        </div>
+	        
+	    </script>
+
+		<script id="lose-player-template" type="text/template">
+	    	<h1 style="color:#fff">You lost</h1>
+	    </script>
+
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 		<script src="/socket.io/socket.io.js"></script>
 		<script src="/clientSocket.js"></script>

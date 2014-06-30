@@ -17,6 +17,7 @@ jQuery(function($){
             IO.socket.on('goInToTheGame', IO.goToGame);
             IO.socket.on('showPlayerChoice', IO.showChoice);
             IO.socket.on('showBothChoices', IO.showBothChoices);
+            IO.socket.on('finalResult', IO.showFinalWinner);
         },
         onConnected : function(data) {
             // Cache a copy of the client's socket.IO session ID on the App
@@ -59,6 +60,9 @@ jQuery(function($){
         },
         showBothChoices : function(data) {
             App[App.myRole].showTwoPlayersChoices(data);
+        },
+        showFinalWinner : function(data) {
+            App[App.myRole].showFinalWinner(data);
         }
 
     }
@@ -86,6 +90,8 @@ jQuery(function($){
             App.$gamePlayerWaitTemplate = $('#game-wait-player-template').html();
             App.$gameHostWaitTemplate = $('#game-wait-host-template').html();
             App.$gameHostStartTemplate = $('#game-main-host-template').html();
+            App.$winnerWaitTemplate = $('#win-wait-player-template').html();
+            App.$loseTemplate = $('#lose-player-template').html();
         },
 
         bindEvents: function () {
@@ -181,13 +187,6 @@ jQuery(function($){
                 } else if (data.position === 'right') {
                     TweenLite.to($('#waiting #readyR'), 0.5, {opacity:"1"});
                 }
-
-                // if (data.readyNumbers === 2) {
-                //     console.log('ready to jump into game!!!!');
-                //     window.setTimeout(function(){
-                //         $('#hostGameArea').html(App.$gameHostStartTemplate);
-                //     }, 800);
-                // }
                 
             },
             goInToGame: function(data) {
@@ -223,8 +222,19 @@ jQuery(function($){
                     IO.socket.emit('clearRound', {gameId: App.gameId});
                     $('.p1Game').find('.gCircXL').eq(0).attr('class', 'gs gCircXL circ');
                     $('.p2Game').find('.gCircXL').eq(0).attr('class', 'gs gCircXL circ');
-                    $('#round').html(parseInt($('#round').html()) + 1);
+                    if (data.leftChoice !== data.rightChoice) {
+                        console.log('not equal');
+                        $('#round').html(parseInt($('#round').html()) + 1);
+                    }
+                    
                 }, 4000);
+            },
+
+            showFinalWinner: function(data) {
+                $('#hostGameArea').html(App.$gameHostWaitTemplate);
+                $('#ProfileL').append('<span>' + data.finalWinnerName + '</span>');
+                $('#ProfileL').find('.streak').eq(0).find('span').html(data.finalWinnerPoint);
+                $('#QRXL').find('img').eq(0).attr('src', 'http://chart.apis.google.com/chart?cht=qr&chs=200x200&chl=http://localhost:3000/');
             }
         },
 
@@ -267,7 +277,6 @@ jQuery(function($){
                 IO.socket.emit('playerJoinGame', data);
                 console.log('gameId: ' + data.gameId);
                 io('/' + data.gameId);
-
 
             },
 
@@ -321,13 +330,24 @@ jQuery(function($){
                     $('#p2Profile').find('.gStatus').eq(0).find('ul').eq(0).addClass('win' + data.winRounds.rightWin);
                 }, 2000);
                 
+            },
+
+            showFinalWinner: function(data) {
+                console.log('showFinal my side: ' + App.Player.myPosition + ', and game ID is: ' + App.gameId);
+                if (App.Player.myPosition === data.finalWinnerSide) {
+                    //to winner waiting...
+                    $('#hostGameArea').html(App.$winnerWaitTemplate);
+                    $('#ProfileMe').append('<span>' + App.Player.myName + '</span>');
+                    $('#ProfileMe').find('.streak').eq(0).find('span').html(data.finalWinnerPoint);
+                } else {
+                    //to loser page...
+                    $('#hostGameArea').html(App.$loseTemplate);
+                    IO.socket.emit('iamlose', {'gameId': App.gameId});
+                }
             }
 
-        },
+        }
 
-        /* **************************
-                  UTILITY CODE
-           ************************** */
 
     };
 

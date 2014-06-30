@@ -9,9 +9,14 @@
 	</head>
 	<body>
 		<p>list all rooms</p>
-		<ul>
+		<table>
+			<tr>
+				<th>game ID</th>
+				<th>connected sockets</th>
+				<th>staus</th>
+			</tr>
 			
-		</ul>
+		</table>
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 	<script src="/socket.io/socket.io.js"></script>
 	<script>
@@ -25,10 +30,14 @@ jQuery(function($){
 		socket.emit('askRooms', {});
 	});
 
-	socket.on('showRoom', function(data) {
-		for (var i = 0; i < data.length; i++) {
-			$('ul').append('<li>' + data[i] + '</li>');
+	socket.on('showRoom', function(roomPool) {
+		console.log(roomPool);
+		var toAppendHtml;
+		for (var i in roomPool) {
+			// $('ul').append('<li>' + data[i] + '</li>');
+			toAppendHtml = toAppendHtml + '<tr><td>' + i + '</td><td>' + roomPool[i].numbers + '</td><td>' + roomPool[i].status + '</td></tr>';
 		}
+		$('table').append(toAppendHtml);
 	});
 
 }($));
